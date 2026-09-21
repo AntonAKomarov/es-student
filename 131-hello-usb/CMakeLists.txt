@@ -3,7 +3,7 @@ set(PICO_BOARD pico)
 set(PICO_PLATFORM rp2040)
 
 include(pico_sdk_import.cmake)
-project(113_hello_usb)	
+project(131_hello_usb)	
 pico_sdk_init()
 
 add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/main.c)
