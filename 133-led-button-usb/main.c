@@ -19,6 +19,26 @@ bool get_button_debounce(uint pin)
 	return state && gpio_get(pin);
 }
 
+bool handle_command(int command, bool led)
+{
+	if (command=='e')
+	{
+		led=true;
+		set_led(led);
+	}
+	else	if (command=='d')
+	{
+		led=false;
+		set_led(led);
+	}
+	else
+	{
+		printf("unknown command: %c\n", command);
+	}
+	return led;
+}
+
+
 int main()
 {
 	stdio_init_all();
@@ -37,14 +57,22 @@ int main()
 	while (1)
 	{
        bool current = get_button_debounce(BUTTON_PIN);
+	   
 
         if (previous == true && current == false)
         {
 	        led = !led;
 	        set_led(led);
         }
-
         previous = current;
+
+		int command = getchar_timeout_us(0);
+		if (command == PICO_ERROR_TIMEOUT)
+        {
+            continue;
+        }
+
+        led = handle_command(command, led);
 	}
 	return 0;
 }
