@@ -9,7 +9,7 @@
 
 #define LINE_SIZE 32
 char line [LINE_SIZE];
-uint line_lenght=0;
+uint line_length=0;
 
 
 const uint BUTTON_PIN = 15;
@@ -59,20 +59,20 @@ void read_line(void)
 
 	if (symbol=='\r' || symbol=='\n'){
 		putchar('\n');
-		line[line_lenght]='\0';
+		line[line_length]='\0';
 
-		if (line_lenght>0){
+		if (line_length>0){
 			LOG_DBG("got %s\n", line);
 			handle_command(line);
 		}
 
-		line_lenght=0;
+		line_length=0;
 		return;
 	}
 
-	if (line_lenght+1<LINE_SIZE){
-		line[line_lenght] = (char)symbol;
-		line_lenght=line_lenght+1;
+	if (line_length+1<LINE_SIZE){
+		line[line_length] = (char)symbol;
+		line_length=line_length+1;
 		putchar(symbol);
 	}
 
