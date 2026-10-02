@@ -6,6 +6,7 @@
 #include "led.h"
 #include "log.h"
 #include "pico/stdlib.h"
+#include "memory.h"
 
 #define LINE_SIZE 32
 char line [LINE_SIZE];
@@ -51,6 +52,8 @@ void cmd_ping(void)
 		printf("pong\n");
 }
 
+
+
 struct command_t
 {
 	const char *name;
@@ -63,6 +66,7 @@ const struct command_t commands[]={
 	{"info", cmd_info},
 	{"version", cmd_version},	
 	{"ping", cmd_ping},
+	{"mem_info", cmd_mem_info},
 
 };
 
@@ -135,7 +139,7 @@ int main()
         if (previous == true && current == false)
         {
 			led_toggle();
-			LOG_INF("led s%\n", led_is_on() ? "on":"off");
+			LOG_INF("led %s\n", led_is_on() ? "on":"off");
         }
         previous = current;
 
