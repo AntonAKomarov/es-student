@@ -29,7 +29,7 @@ static void row(const char *name, uintptr_t start, uintptr_t end)
 }
 
 
-void cmd_mem_info(void)
+void mem_info(void)
 {
 
 unsigned boot2_size = (unsigned)((uintptr_t)&__boot2_end__ - (uintptr_t)&__boot2_start__);
