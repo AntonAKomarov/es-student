@@ -20,10 +20,12 @@ target_link_libraries(${PROJECT_NAME}
 )
 target_compile_definitions(${PROJECT_NAME} PRIVATE DEVICE_BOARD="${PICO_BOARD}")
 target_include_directories(${PROJECT_NAME} PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/led
 	${CMAKE_CURRENT_SOURCE_DIR}/logging
 	${CMAKE_CURRENT_SOURCE_DIR}/device
 	${CMAKE_CURRENT_SOURCE_DIR}/memory
+	
 )
 
 pico_set_linker_script(${PROJECT_NAME}

@@ -1,8 +1,11 @@
-#include"memory.h"
-#include<stdio.h>
-#include<stdint.h>
-#include"hardware/regs/addressmap.h"
-#include"pico/stdlib.h"
+#include "memory.h"
+#include "command.h"
+#include "device.h"
+#include <stdio.h>
+#include <stdint.h>
+#include "hardware/regs/addressmap.h"
+#include "pico/stdlib.h"
+#include <stdlib.h>
 
 extern char __flash_binary_start;
 extern char __flash_binary_end;
@@ -17,9 +20,12 @@ extern char __HeapLimit;
 extern char __StackBottom;
 extern char __StackTop;
 
+uint32_t data_variable = 100;
+uint32_t bss_variable;
 
 
 
+int main(void);
 
 
 static void row(const char *name, uintptr_t start, uintptr_t end)
@@ -72,10 +78,97 @@ printf("  %-11s %8u = data %u + bss %u\n",
 printf("  %-11s %8u for heap and %u for stack\n",
        "ram free", heap_free, stack_size);
 
+}
+
+void fw_info(void)
+{
+   
+    data_variable++;
+    bss_variable++;
+
+    
+    uint32_t stack_variable = 1946;
+    uint32_t *heap_variable = malloc(sizeof(uint32_t));
+    if (heap_variable != NULL)
+        *heap_variable = 1951;
+
+ 
+    uintptr_t main_thumb  = (uintptr_t)main;
+    uintptr_t main_clear  = main_thumb & ~(uintptr_t)1u;
+    uint16_t *main_code   = (uint16_t *)main_clear;
+
+    uintptr_t fw_thumb    = (uintptr_t)fw_info;
+    uintptr_t fw_clear    = fw_thumb & ~(uintptr_t)1u;
+    uint16_t *fw_code     = (uint16_t *)fw_clear;
+
+  
+    static const char dev_name[]    = DEVICE_NAME;
+    static const char dev_version[] = FIRMWARE_VERSION;
+    static const char dev_project[] = DEVICE_PROJECT;
+    static const char dev_board[]   = DEVICE_BOARD;
+    static const char dev_repo[]    = DEVICE_REPO;
+
+    
+    printf("%-16s %-12s %s\n", "object", "address", "value");
+    printf("%-16s %-12s %s\n", "----------------",
+                               "------------",
+                               "------------------");
 
 
+    printf("%-16s 0x%08lx   0x%04x\n", "main",    (unsigned long)main_thumb, *main_code);
+    printf("%-16s 0x%08lx   0x%04x\n", "fw_info", (unsigned long)fw_thumb,   *fw_code);
 
 
+    printf("%-16s 0x%08lx\n", "commands", (unsigned long)(uintptr_t)commands);
+
+   
+    for (uint i = 0; i < command_count; i++) {
+        printf("- %-14s 0x%08lx\n",
+               commands[i].name,
+               (unsigned long)(uintptr_t)commands[i].handler);
+    }
+
+  
+    printf("%-16s 0x%08lx   %s\n", "DEVICE_NAME",
+           (unsigned long)(uintptr_t)dev_name,    dev_name);
+    printf("%-16s 0x%08lx   %s\n", "FIRMWARE_VERSION",
+           (unsigned long)(uintptr_t)dev_version, dev_version);
+    printf("%-16s 0x%08lx   %s\n", "DEVICE_PROJECT",
+           (unsigned long)(uintptr_t)dev_project, dev_project);
+    printf("%-16s 0x%08lx   %s\n", "DEVICE_BOARD",
+           (unsigned long)(uintptr_t)dev_board,   dev_board);
+    printf("%-16s 0x%08lx   %s\n", "DEVICE_REPO",
+           (unsigned long)(uintptr_t)dev_repo,    dev_repo);
 
 
-}    
+    printf("%-16s 0x%08lx   %lu  (.data)\n", "data_variable",
+           (unsigned long)(uintptr_t)&data_variable,
+           (unsigned long)data_variable);
+
+   
+    printf("%-16s 0x%08lx   %lu  (.bss)\n", "bss_variable",
+           (unsigned long)(uintptr_t)&bss_variable,
+           (unsigned long)bss_variable);
+
+  
+    printf("%-16s 0x%08lx   %lu  (stack)\n", "stack_variable",
+           (unsigned long)(uintptr_t)&stack_variable,
+           (unsigned long)stack_variable);
+
+    /* --- куча: печатаем адрес БЛОКА, а не адрес указателя --- */
+    if (heap_variable != NULL) {
+        printf("%-16s 0x%08lx   %lu  (heap)\n", "heap_variable",
+               (unsigned long)(uintptr_t)heap_variable,
+               (unsigned long)*heap_variable);
+    } else {
+        printf("%-16s (malloc failed)\n", "heap_variable");
+    }
+
+    
+    free(heap_variable);
+}
+
+void cmd_fw_info(void)
+{
+    fw_info();
+}
