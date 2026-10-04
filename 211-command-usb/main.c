@@ -8,6 +8,7 @@
 #include "pico/stdlib.h"
 #include "memory.h"
 #include "command.h"
+#include <stddef.h>
 
 #define LINE_SIZE 32
 char line [LINE_SIZE];
@@ -66,7 +67,7 @@ const struct command_t commands[]={
 	{"ping", cmd_ping},
 	{"mem_info", cmd_mem_info},
 	{"fw_info",  cmd_fw_info},
-
+	{"dev_info", cmd_dev_info},
 };
 
 const uint command_count=sizeof(commands) / sizeof(commands[0]);
