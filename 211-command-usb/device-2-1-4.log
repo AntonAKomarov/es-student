@@ -3,77 +3,77 @@
 устройство: 2e8a:000a
 серийный номер: 50031519385FA20C
 порт: COM7
-начало: 2026-10-04T12:46:05
+начало: 2026-10-04T13:46:42
    0.000 --> fw_info
-   0.145 <-- fw_info
-   0.146 <-- dbg read_line:103 got fw_info
-   0.146 <-- object           address      value
-   0.147 <-- ---------------- ------------ ------------------
-   0.147 <-- main             0x10000321   0xb5f8
-   0.148 <-- fw_info          0x10000669   0x4b4d
-   0.148 <-- commands         0x100075c8
-   0.149 <-- - enable         0x10000281
-   0.149 <-- - disable        0x100002bd
-   0.149 <-- - info           0x100002f9
-   0.150 <-- - version        0x10000301
-   0.150 <-- - ping           0x10000309
-   0.151 <-- - mem_info       0x10000319
-   0.151 <-- - fw_info        0x10000a71
-   0.152 <-- DEVICE_NAME      0x10007a78   es-led-module
-   0.152 <-- FIRMWARE_VERSION 0x10007ac4   1.0.0
-   0.153 <-- DEVICE_PROJECT   0x10007a88   211-command-usb
-   0.153 <-- DEVICE_BOARD     0x10007a70   pico
-   0.154 <-- DEVICE_REPO      0x10007a98   https://github.com/AntonAKomarov/es-student
-   0.155 <-- data_variable    0x20000fc8   101  (.data)
-   0.156 <-- bss_variable     0x2000207c   1  (.bss)
-   0.157 <-- stack_variable   0x20041fac   1946  (stack)
-   0.158 <-- heap_variable    0x20002578   1951  (heap)
-   2.177 --> fw_info
-   2.328 <-- fw_info
-   2.329 <-- dbg read_line:103 got fw_info
-   2.330 <-- object           address      value
-   2.331 <-- ---------------- ------------ ------------------
-   2.331 <-- main             0x10000321   0xb5f8
-   2.332 <-- fw_info          0x10000669   0x4b4d
-   2.332 <-- commands         0x100075c8
-   2.332 <-- - enable         0x10000281
-   2.333 <-- - disable        0x100002bd
-   2.333 <-- - info           0x100002f9
-   2.334 <-- - version        0x10000301
-   2.334 <-- - ping           0x10000309
-   2.335 <-- - mem_info       0x10000319
-   2.335 <-- - fw_info        0x10000a71
-   2.336 <-- DEVICE_NAME      0x10007a78   es-led-module
-   2.336 <-- FIRMWARE_VERSION 0x10007ac4   1.0.0
-   2.337 <-- DEVICE_PROJECT   0x10007a88   211-command-usb
-   2.337 <-- DEVICE_BOARD     0x10007a70   pico
-   2.338 <-- DEVICE_REPO      0x10007a98   https://github.com/AntonAKomarov/es-student
-   2.339 <-- data_variable    0x20000fc8   102  (.data)
-   2.339 <-- bss_variable     0x2000207c   2  (.bss)
-   2.340 <-- stack_variable   0x20041fac   1946  (stack)
-   2.340 <-- heap_variable    0x20002578   1951  (heap)
-   4.353 --> fw_info
-   4.511 <-- fw_info
-   4.512 <-- dbg read_line:103 got fw_info
-   4.513 <-- object           address      value
-   4.514 <-- ---------------- ------------ ------------------
-   4.514 <-- main             0x10000321   0xb5f8
-   4.515 <-- fw_info          0x10000669   0x4b4d
-   4.515 <-- commands         0x100075c8
-   4.515 <-- - enable         0x10000281
-   4.516 <-- - disable        0x100002bd
-   4.516 <-- - info           0x100002f9
-   4.517 <-- - version        0x10000301
-   4.517 <-- - ping           0x10000309
-   4.518 <-- - mem_info       0x10000319
-   4.518 <-- - fw_info        0x10000a71
-   4.519 <-- DEVICE_NAME      0x10007a78   es-led-module
-   4.520 <-- FIRMWARE_VERSION 0x10007ac4   1.0.0
-   4.520 <-- DEVICE_PROJECT   0x10007a88   211-command-usb
-   4.521 <-- DEVICE_BOARD     0x10007a70   pico
-   4.522 <-- DEVICE_REPO      0x10007a98   https://github.com/AntonAKomarov/es-student
-   4.523 <-- data_variable    0x20000fc8   103  (.data)
-   4.523 <-- bss_variable     0x2000207c   3  (.bss)
-   4.524 <-- stack_variable   0x20041fac   1946  (stack)
-   4.524 <-- heap_variable    0x20002578   1951  (heap)
+   0.158 <-- fw_info
+   0.159 <-- dbg read_line:103 got fw_info
+   0.160 <-- object           address      value
+   0.161 <-- ---------------- ------------ ------------------
+   0.161 <-- main             0x10000321   0xb5f8
+   0.162 <-- fw_info          0x10000669   0x4b4d
+   0.162 <-- commands         0x100075c8
+   0.162 <-- - enable         0x10000281
+   0.163 <-- - disable        0x100002bd
+   0.163 <-- - info           0x100002f9
+   0.164 <-- - version        0x10000301
+   0.164 <-- - ping           0x10000309
+   0.165 <-- - mem_info       0x10000319
+   0.165 <-- - fw_info        0x10000a71
+   0.165 <-- DEVICE_NAME      0x10007a78   es-led-module
+   0.166 <-- FIRMWARE_VERSION 0x10007ac4   1.0.0
+   0.167 <-- DEVICE_PROJECT   0x10007a88   211-command-usb
+   0.167 <-- DEVICE_BOARD     0x10007a70   pico
+   0.168 <-- DEVICE_REPO      0x10007a98   https://github.com/AntonAKomarov/es-student
+   0.168 <-- data_variable    0x20000fc8   101  (.data)
+   0.169 <-- bss_variable     0x2000207c   1  (.bss)
+   0.170 <-- stack_variable   0x20041fac   1946  (stack)
+   0.170 <-- heap_variable    0x20002578   1951  (heap)
+   2.167 --> fw_info
+   2.321 <-- fw_info
+   2.322 <-- dbg read_line:103 got fw_info
+   2.322 <-- object           address      value
+   2.323 <-- ---------------- ------------ ------------------
+   2.323 <-- main             0x10000321   0xb5f8
+   2.324 <-- fw_info          0x10000669   0x4b4d
+   2.324 <-- commands         0x100075c8
+   2.324 <-- - enable         0x10000281
+   2.325 <-- - disable        0x100002bd
+   2.325 <-- - info           0x100002f9
+   2.326 <-- - version        0x10000301
+   2.326 <-- - ping           0x10000309
+   2.327 <-- - mem_info       0x10000319
+   2.328 <-- - fw_info        0x10000a71
+   2.329 <-- DEVICE_NAME      0x10007a78   es-led-module
+   2.330 <-- FIRMWARE_VERSION 0x10007ac4   1.0.0
+   2.331 <-- DEVICE_PROJECT   0x10007a88   211-command-usb
+   2.331 <-- DEVICE_BOARD     0x10007a70   pico
+   2.333 <-- DEVICE_REPO      0x10007a98   https://github.com/AntonAKomarov/es-student
+   2.333 <-- data_variable    0x20000fc8   102  (.data)
+   2.334 <-- bss_variable     0x2000207c   2  (.bss)
+   2.335 <-- stack_variable   0x20041fac   1946  (stack)
+   2.336 <-- heap_variable    0x20002578   1951  (heap)
+   4.361 --> fw_info
+   4.504 <-- fw_info
+   4.505 <-- dbg read_line:103 got fw_info
+   4.505 <-- object           address      value
+   4.506 <-- ---------------- ------------ ------------------
+   4.506 <-- main             0x10000321   0xb5f8
+   4.507 <-- fw_info          0x10000669   0x4b4d
+   4.507 <-- commands         0x100075c8
+   4.507 <-- - enable         0x10000281
+   4.508 <-- - disable        0x100002bd
+   4.508 <-- - info           0x100002f9
+   4.509 <-- - version        0x10000301
+   4.509 <-- - ping           0x10000309
+   4.510 <-- - mem_info       0x10000319
+   4.510 <-- - fw_info        0x10000a71
+   4.511 <-- DEVICE_NAME      0x10007a78   es-led-module
+   4.511 <-- FIRMWARE_VERSION 0x10007ac4   1.0.0
+   4.512 <-- DEVICE_PROJECT   0x10007a88   211-command-usb
+   4.513 <-- DEVICE_BOARD     0x10007a70   pico
+   4.514 <-- DEVICE_REPO      0x10007a98   https://github.com/AntonAKomarov/es-student
+   4.515 <-- data_variable    0x20000fc8   103  (.data)
+   4.516 <-- bss_variable     0x2000207c   3  (.bss)
+   4.517 <-- stack_variable   0x20041fac   1946  (stack)
+   4.518 <-- heap_variable    0x20002578   1951  (heap)
 итог: отправлено команд 3, принято строк 69

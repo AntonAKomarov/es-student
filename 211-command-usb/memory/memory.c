@@ -93,13 +93,11 @@ void fw_info(void)
         *heap_variable = 1951;
 
  
-    uintptr_t main_thumb  = (uintptr_t)main;
-    uintptr_t main_clear  = main_thumb & ~(uintptr_t)1u;
-    uint16_t *main_code   = (uint16_t *)main_clear;
+    
+    uint16_t *main_code = (uint16_t *)((uintptr_t)main & ~1u);
+    uint16_t *fw_code = (uint16_t *)((uintptr_t)fw_info & ~1u);
 
-    uintptr_t fw_thumb    = (uintptr_t)fw_info;
-    uintptr_t fw_clear    = fw_thumb & ~(uintptr_t)1u;
-    uint16_t *fw_code     = (uint16_t *)fw_clear;
+
 
   
     static const char dev_name[]    = DEVICE_NAME;
@@ -115,8 +113,10 @@ void fw_info(void)
                                "------------------");
 
 
-    printf("%-16s 0x%08lx   0x%04x\n", "main",    (unsigned long)main_thumb, *main_code);
-    printf("%-16s 0x%08lx   0x%04x\n", "fw_info", (unsigned long)fw_thumb,   *fw_code);
+    printf("%-16s 0x%08lx   0x%04x\n",
+           "main",    (unsigned long)(uintptr_t)main,    *main_code);
+    printf("%-16s 0x%08lx   0x%04x\n",
+           "fw_info", (unsigned long)(uintptr_t)fw_info, *fw_code);
 
 
     printf("%-16s 0x%08lx\n", "commands", (unsigned long)(uintptr_t)commands);
