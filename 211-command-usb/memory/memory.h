@@ -4,3 +4,5 @@
 void mem_info(void);
 void fw_info(void);
 void cmd_fw_info(void);
+void boot_info(void);       
+void cmd_boot_info(void);   
