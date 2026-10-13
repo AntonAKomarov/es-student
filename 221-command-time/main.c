@@ -15,8 +15,14 @@
 char line [LINE_SIZE];
 uint line_length=0;
 
-const uint BLINK_HALF_PERIOD_MS = 500;
+// прикидка: за член ряда 4 операции с double, 175 + 110 + 190 + 110 = 585 тактов;
+// 1 000 000 членов по 585 тактов при 125 МГц — около 4,7 с
+const uint CALC_PI_TERMS = 1000000;
+const uint BLINK_HALF_PERIOD_MS = 500; 
 uint64_t last_toggle_us = 0;
+volatile double pi_result;
+
+double calc_pi(uint terms); 
 
 void cmd_info(void)
 {
@@ -48,6 +54,16 @@ void cmd_uptime(void)
 	uptime();
 }
 
+void cmd_calc_pi(void)
+{
+    uint64_t start_us = time_us_64();
+    pi_result = calc_pi(CALC_PI_TERMS);
+    uint64_t spent_us = time_us_64() - start_us;
+
+    printf("pi: %.8f\n", pi_result);
+    printf("time: %llu ms\n", spent_us / 1000);
+}
+
 
 
 
@@ -61,6 +77,7 @@ const struct command_t commands[]={
 	{"boot_info", cmd_boot_info},
 	{"clk_info", cmd_clk_info},
 	{"uptime", cmd_uptime},
+	{"calc_pi", cmd_calc_pi},
 };
 
 const uint command_count=sizeof(commands) / sizeof(commands[0]);
@@ -121,13 +138,26 @@ void blink(void)
     }
 }
 
+double calc_pi(uint terms){
+	double sum=0.0;
+	double k=1.0;
+	long int i=0;
+	while (i<terms)
+	{
+		sum=sum+k/(2.0*i+1.0);
+		i++;
+		k=-k;
+	}
+	return sum*4.0;
+}
+
 
 int main()
 {
 	stdio_init_all();
-	if (time_us_64()>2000000){
+	sleep_ms(2000);
 	led_init();
-	}
+	
 	 
 	 bool previous = false;
 
