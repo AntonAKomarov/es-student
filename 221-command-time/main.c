@@ -74,6 +74,13 @@ void cmd_main_time_exec(){
 	printf("iteration avg %.2f us, max %u us\n", profiling_avg_us(), (unsigned)profiling_max_us());
 }
 
+void cmd_clk_sys_low(void){
+	clk_sys_low();
+}
+
+void cmd_clk_sys_default(void){
+	clk_sys_default();
+}
 
 
 const struct command_t commands[]={
@@ -89,6 +96,9 @@ const struct command_t commands[]={
 	{"calc_pi", cmd_calc_pi},
 	{"main_time_exec", cmd_main_time_exec},
 	{"main_time_reset", cmd_main_time_reset},
+	{"clk_sys_low", cmd_clk_sys_low},
+	{"clk_sys_default", cmd_clk_sys_default},
+
 };
 
 const uint command_count=sizeof(commands) / sizeof(commands[0]);
