@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <pico/stdlib.h>
 #include "button-task.h"
+#include "pi-task.h"
 
 // --- Строгий парсер из т2.3.8 ---
 static bool parse_u32(const char *text, uint32_t *value) {
@@ -50,36 +51,42 @@ static void cmd_main_time_reset(const command_t *command) {
     printf("Max reset\n");
 }
 
-static double calc_pi(uint32_t terms) {
-    double sum = 0.0;
-    double k = 1.0;
-    for (uint32_t i = 0; i < terms; i++) {
-        sum += k / (2.0 * i + 1.0);
-        k = -k;
-    }
-    return sum * 4.0;
-}
-
-static void cmd_calc_pi(const command_t *command) {
-    uint32_t terms = 1000000; 
+static void cmd_pi_start(const command_t *command) {
+    uint32_t terms = 1000000; // По умолчанию
     
     if (command->argc > 1) {
-        printf("error: usage calc_pi [terms]\n");
+        printf("error: usage pi_start [<terms>]\n");
         return;
     }
     if (command->argc == 1) {
         if (!parse_u32(command->argv[0], &terms) || terms == 0) {
-            printf("error: usage calc_pi [terms]\n");
+            printf("error: usage pi_start [<terms>]\n");
             return;
         }
     }
     
-    uint64_t start_us = time_us_64();
-    double result = calc_pi(terms);
-    uint64_t spent_us = time_us_64() - start_us;
+    // Пытаемся запустить расчет
+    if (!pi_task_start(terms)) {
+        printf("error: pi is busy\n");
+        return;
+    }
     
-    printf("pi: %.9f\n", result);
-    printf("time: %llu ms\n", spent_us / 1000);
+    printf("pi: started, %u terms\n", (unsigned)terms);
+}
+
+static void cmd_pi(const command_t *command) {
+    (void)command;
+    switch (pi_task_get_state()) {
+        case PI_STATE_NOT_STARTED:
+            printf("pi: not started\n");
+            break;
+        case PI_STATE_RUNNING:
+            printf("pi: running\n");
+            break;
+        case PI_STATE_DONE:
+            printf("pi: %.9f in %llu ms\n", pi_task_get_result(), (unsigned long long)pi_task_get_time_ms());
+            break;
+    }
 }
 
 // --- Новые команды светодиода ---
@@ -138,14 +145,15 @@ static void cmd_button(const command_t *command) {
 const api_command_t api_commands[] = {
     {"info", "device passport", cmd_info},
     {"uptime", "time since reset", cmd_uptime},
-    {"calc_pi", "calculate pi: calc_pi [terms]", cmd_calc_pi},
     {"main_time_exec", "superloop iteration: average and maximum", cmd_main_time_exec},
     {"main_time_reset", "reset maximum iteration", cmd_main_time_reset},
     {"led_enable", "turn LED on", cmd_led_enable},
     {"led_disable", "turn LED off", cmd_led_disable},
     {"led_blink", "blink LED", cmd_led_blink},
     {"led_period", "set LED period: led_period <period_ms>", cmd_led_period},
-    {"button", "button state and presses", cmd_button}
+    {"button", "button state and presses", cmd_button},
+    {"pi_start", "start pi calculation: pi_start [terms]", cmd_pi_start},
+    {"pi", "get pi result or state", cmd_pi},
 };
 
 const uint32_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
