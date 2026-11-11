@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <pico/stdlib.h>
+#include "button-task.h"
 
 // --- Строгий парсер из т2.3.8 ---
 static bool parse_u32(const char *text, uint32_t *value) {
@@ -127,6 +128,12 @@ static void cmd_led_period(const command_t *command) {
     print_led_status();
 }
 
+static void cmd_button(const command_t *command) {
+    (void)command;
+    const char* state_str = button_task_is_pressed() ? "pressed" : "released";
+    printf("button: %s, presses %u\n", state_str, (unsigned)button_task_get_press_count());
+}
+
 // Таблица команд
 const api_command_t api_commands[] = {
     {"info", "device passport", cmd_info},
@@ -137,7 +144,8 @@ const api_command_t api_commands[] = {
     {"led_enable", "turn LED on", cmd_led_enable},
     {"led_disable", "turn LED off", cmd_led_disable},
     {"led_blink", "blink LED", cmd_led_blink},
-    {"led_period", "set LED period: led_period <period_ms>", cmd_led_period}
+    {"led_period", "set LED period: led_period <period_ms>", cmd_led_period},
+    {"button", "button state and presses", cmd_button}
 };
 
 const uint32_t api_command_count = sizeof(api_commands) / sizeof(api_commands[0]);
