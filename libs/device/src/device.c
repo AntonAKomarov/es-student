@@ -3,6 +3,7 @@
 #include "hardware/regs/addressmap.h"
 #include "hardware/regs/sysinfo.h"
 #include <string.h>
+#include "pico/unique_id.h"
 
 void device_get_info(device_info_t *info) {
     pico_get_unique_board_id_string(info->serial, sizeof(info->serial));
