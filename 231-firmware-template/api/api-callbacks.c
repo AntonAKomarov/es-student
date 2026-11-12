@@ -2,6 +2,8 @@
 #include "device.h"
 #include "profiling.h"
 #include "led-task.h"
+#include "button-task.h"
+#include "pi-task.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -9,8 +11,6 @@
 #include <errno.h>
 #include <stdint.h>
 #include <pico/stdlib.h>
-#include "button-task.h"
-#include "pi-task.h"
 
 // --- Строгий парсер из т2.3.8 ---
 static bool parse_u32(const char *text, uint32_t *value) {
@@ -32,7 +32,18 @@ static bool parse_u32(const char *text, uint32_t *value) {
 // --- Старые команды ---
 static void cmd_info(const command_t *command) {
     (void)command;
-    device_info();
+    device_info_t info;
+    device_get_info(&info); // Заполняем структуру
+
+    // Печатаем (8 строк, как и раньше)
+    printf("name: %s\n", DEVICE_NAME);
+    printf("version: %s\n", FIRMWARE_VERSION);
+    printf("project: %s\n", DEVICE_PROJECT);
+    printf("repo: %s\n", DEVICE_REPO);
+    printf("board: %s\n", info.board);
+    printf("serial: %s\n", info.serial);
+    printf("chip: manufacturer 0x%03x, part 0x%04x, revision %u\n", (unsigned)info.manufacturer, (unsigned)info.part, (unsigned)info.revision);
+    printf("pico-sdk: %s\n", info.sdk_version);
 }
 
 static void cmd_uptime(const command_t *command) {
@@ -40,15 +51,24 @@ static void cmd_uptime(const command_t *command) {
     printf("uptime: %llu ms\n", time_us_64() / 1000);
 }
 
-static void cmd_main_time_exec(const command_t *command) {
+static void cmd_profiling(const command_t *command) {
     (void)command;
-    printf("iteration avg %.2f us, max %u us\n", profiling_avg_us(), (unsigned)profiling_max_us());
+    for (uint32_t i = 0; i < PROFILING_MAX_STOPWATCHES; i++) {
+        profiling_result_t res;
+        if (profiling_get(i, &res)) {
+            printf("%s count %u mean %u us max %u us\n", 
+                   res.name, 
+                   (unsigned)res.count, 
+                   (unsigned)res.mean_us, 
+                   (unsigned)res.max_us);
+        }
+    }
 }
 
-static void cmd_main_time_reset(const command_t *command) {
+static void cmd_profiling_reset(const command_t *command) {
     (void)command;
-    profiling_reset_max();
-    printf("Max reset\n");
+    profiling_reset();
+    printf("Profiling reset\n");
 }
 
 static void cmd_pi_start(const command_t *command) {
@@ -145,8 +165,8 @@ static void cmd_button(const command_t *command) {
 const api_command_t api_commands[] = {
     {"info", "device passport", cmd_info},
     {"uptime", "time since reset", cmd_uptime},
-    {"main_time_exec", "superloop iteration: average and maximum", cmd_main_time_exec},
-    {"main_time_reset", "reset maximum iteration", cmd_main_time_reset},
+    {"profiling", "show all stopwatches", cmd_profiling},             // <-- ЗАМЕНА
+    {"profiling_reset", "reset all stopwatches", cmd_profiling_reset},// <-- ЗАМЕНА
     {"led_enable", "turn LED on", cmd_led_enable},
     {"led_disable", "turn LED off", cmd_led_disable},
     {"led_blink", "blink LED", cmd_led_blink},
