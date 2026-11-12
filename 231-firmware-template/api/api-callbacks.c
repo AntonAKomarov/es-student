@@ -1,16 +1,18 @@
 #include "api-commands.h"
-#include "device.h"
-#include "profiling.h"
+#include "device/device.h"
+#include "logging/log.h"        
+#include "profiling/profiling.h"
+#include "systime/systime.h"    
 #include "led-task.h"
 #include "button-task.h"
 #include "pi-task.h"
+#include "firmware.h"           
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <errno.h>
 #include <stdint.h>
-#include <pico/stdlib.h>
 
 // --- Строгий парсер из т2.3.8 ---
 static bool parse_u32(const char *text, uint32_t *value) {
@@ -33,13 +35,14 @@ static bool parse_u32(const char *text, uint32_t *value) {
 static void cmd_info(const command_t *command) {
     (void)command;
     device_info_t info;
-    device_get_info(&info); // Заполняем структуру
+    device_get_info(&info);
 
-    // Печатаем (8 строк, как и раньше)
-    printf("name: %s\n", DEVICE_NAME);
+    // Используем FIRMWARE_*
+    printf("name: %s\n", FIRMWARE_NAME);
     printf("version: %s\n", FIRMWARE_VERSION);
-    printf("project: %s\n", DEVICE_PROJECT);
-    printf("repo: %s\n", DEVICE_REPO);
+    printf("project: %s\n", FIRMWARE_PROJECT);
+    printf("repo: %s\n", FIRMWARE_REPO);
+    
     printf("board: %s\n", info.board);
     printf("serial: %s\n", info.serial);
     printf("chip: manufacturer 0x%03x, part 0x%04x, revision %u\n", (unsigned)info.manufacturer, (unsigned)info.part, (unsigned)info.revision);
@@ -48,21 +51,22 @@ static void cmd_info(const command_t *command) {
 
 static void cmd_uptime(const command_t *command) {
     (void)command;
-    printf("uptime: %llu ms\n", time_us_64() / 1000);
+    printf("uptime: %llu ms\n", (unsigned long long)systime_ms()); // <-- systime
 }
 
 static void cmd_profiling(const command_t *command) {
     (void)command;
+#if PROFILING_ENABLED
     for (uint32_t i = 0; i < PROFILING_MAX_STOPWATCHES; i++) {
         profiling_result_t res;
         if (profiling_get(i, &res)) {
             printf("%s count %u mean %u us max %u us\n", 
-                   res.name, 
-                   (unsigned)res.count, 
-                   (unsigned)res.mean_us, 
-                   (unsigned)res.max_us);
+                   res.name, (unsigned)res.count, (unsigned)res.mean_us, (unsigned)res.max_us);
         }
     }
+#else
+    printf("profiling is disabled in this build\n");
+#endif
 }
 
 static void cmd_profiling_reset(const command_t *command) {

@@ -1,5 +1,5 @@
 #include "pi-task.h"
-#include "pico/stdlib.h"
+#include "systime/systime.h"
 
 // Порция: около 100 членов ряда, что занимает ~0.5 мс
 #define PI_TERMS_PER_CALL 100
@@ -24,7 +24,7 @@ bool pi_task_start(uint32_t terms) {
     sum = 0.0;
     current_term = 0;
     total_terms = terms;
-    start_time_us = time_us_64();
+    start_time_us = systime_us();
     state = PI_STATE_RUNNING;
     return true;
 }
@@ -50,7 +50,7 @@ void pi_task_handle(void) {
 
     // Если достигли конца — завершаем
     if (current_term >= total_terms) {
-        end_time_us = time_us_64();
+        end_time_us = systime_us();
         state = PI_STATE_DONE;
     }
 }

@@ -1,14 +1,17 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "hardware/gpio.h" // Для инициализации
 
-#include "device.h"
-#include "profiling.h"
+#include "device/device.h"
+#include "logging/log.h"
+#include "profiling/profiling.h"
+#include "stdio-text-protocol/stdio-text-protocol.h"
+#include "systime/systime.h"
+#include "firmware.h"
 #include "api.h"
-#include "stdio-text-protocol.h"
 #include "led-task.h"
 #include "button-task.h"
 #include "pi-task.h"
-#include "log.h" // <-- ДОБАВЛЕНО для LOG_INF
 
 // Номера секундомеров
 typedef enum {
@@ -22,13 +25,10 @@ typedef enum {
 
 int main() {
     stdio_init_all();
-    
-    // Вывод версии при запуске
-    LOG_INF("%s %s\n", DEVICE_NAME, FIRMWARE_VERSION);
-    
+    LOG_INF("%s %s\n", FIRMWARE_NAME, FIRMWARE_VERSION); // <-- Вывод версии
     sleep_ms(2000);
-    
     profiling_init();
+
     profiling_stopwatch_init(STOPWATCH_LOOP, "loop");
     profiling_stopwatch_init(STOPWATCH_COMMAND, "command");
     profiling_stopwatch_init(STOPWATCH_LED, "led");

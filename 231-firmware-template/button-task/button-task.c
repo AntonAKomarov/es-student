@@ -1,6 +1,6 @@
 #include "button-task.h"
 #include "led-task.h" // Кнопка вызывает функцию светодиода
-#include "pico/stdlib.h"
+#include "systime/systime.h"
 #include "hardware/gpio.h"
 
 #define BUTTON_PIN 15
@@ -31,7 +31,7 @@ void button_task_init(void) {
 void button_task_handle(void) {
     // Читаем уровень: нажатая кнопка замыкает вывод на землю и даёт 0 (false)
     bool is_low = !gpio_get(BUTTON_PIN); 
-    uint64_t now_us = time_us_64();
+    uint64_t now_us = systime_us();
 
     switch (current_state) {
         case BUTTON_STATE_RELEASED:

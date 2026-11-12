@@ -1,4 +1,4 @@
-#include "profiling.h"
+#include "profiling/profiling.h"
 #include "pico/stdlib.h"
 #include <stddef.h>
 
@@ -32,6 +32,7 @@ void profiling_stopwatch_init(uint32_t id, const char *name) {
     stopwatches[id].running = false;
 }
 
+#if PROFILING_ENABLED
 void profiling_start(uint32_t id) {
     if (id >= PROFILING_MAX_STOPWATCHES) return;
     stopwatches[id].start_us = time_us_32();
@@ -52,6 +53,7 @@ void profiling_stop(uint32_t id) {
     }
     stopwatches[id].running = false;
 }
+#endif
 
 bool profiling_get(uint32_t id, profiling_result_t *result) {
     if (id >= PROFILING_MAX_STOPWATCHES) return false;
