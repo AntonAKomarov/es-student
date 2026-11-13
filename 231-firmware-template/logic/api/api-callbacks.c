@@ -61,7 +61,7 @@ static void cmd_profiling(const command_t *command) {
         profiling_result_t res;
         if (profiling_get(i, &res)) {
             printf("%s count %u mean %.2f us max %u us\n", 
-                   res.name, (unsigned)res.count, (unsigned)res.mean_us, (unsigned)res.max_us);
+                   res.name, (unsigned)res.count, res.mean_us, (unsigned)res.max_us);
         }
     }
 #else
