@@ -60,7 +60,7 @@ static void cmd_profiling(const command_t *command) {
     for (uint32_t i = 0; i < PROFILING_MAX_STOPWATCHES; i++) {
         profiling_result_t res;
         if (profiling_get(i, &res)) {
-            printf("%s count %u mean %u us max %u us\n", 
+            printf("%s count %u mean %.2f us max %u us\n", 
                    res.name, (unsigned)res.count, (unsigned)res.mean_us, (unsigned)res.max_us);
         }
     }

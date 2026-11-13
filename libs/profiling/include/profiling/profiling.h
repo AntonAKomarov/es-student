@@ -11,7 +11,7 @@
 typedef struct {
     const char *name;
     uint32_t count;
-    uint32_t mean_us;
+    float mean_us;
     uint32_t max_us;
 } profiling_result_t;
 

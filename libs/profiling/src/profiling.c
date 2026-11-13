@@ -65,9 +65,9 @@ bool profiling_get(uint32_t id, profiling_result_t *result) {
     
     // Среднее арифметическое
     if (stopwatches[id].count > 0) {
-        result->mean_us = stopwatches[id].sum_us / stopwatches[id].count;
+        result->mean_us = (float)stopwatches[id].sum_us / (float)stopwatches[id].count;
     } else {
-        result->mean_us = 0;
+        result->mean_us = 0.0f;
     }
     return true;
 }
