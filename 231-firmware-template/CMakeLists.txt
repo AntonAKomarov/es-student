@@ -44,10 +44,7 @@ target_link_libraries(logic
         platform 
         device     
         logging
-        led-task
-        pi-task
-        button-task     
-        api
+       
 
 )
 

@@ -78,6 +78,9 @@ const command_t *stdio_text_protocol_handle(void) {
 
     // Печатный символ
     if (symbol >= 32 && symbol <= 126) {
+              if (line_len == 0) {
+            cmd.truncated = false; 
+        }
         if (line_len < STDIO_TEXT_PROTOCOL_LINE_SIZE - 1) {
             line[line_len++] = (char)symbol;
             putchar(symbol);
