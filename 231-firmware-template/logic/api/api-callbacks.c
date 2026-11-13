@@ -72,7 +72,7 @@ static void cmd_profiling(const command_t *command) {
 static void cmd_profiling_reset(const command_t *command) {
     (void)command;
     profiling_reset();
-    printf("Profiling reset\n");
+    printf("profiling reset\n");
 }
 
 static void cmd_pi_start(const command_t *command) {
@@ -83,8 +83,14 @@ static void cmd_pi_start(const command_t *command) {
         return;
     }
     if (command->argc == 1) {
-        if (!parse_u32(command->argv[0], &terms) || terms == 0) {
+        // Сначала проверяем, что это валидное число
+        if (!parse_u32(command->argv[0], &terms)) {
             printf("error: usage pi_start [<terms>]\n");
+            return;
+        }
+        // Затем проверяем на ноль
+        if (terms == 0) {
+            printf("error: terms must be greater than 0\n");
             return;
         }
     }
