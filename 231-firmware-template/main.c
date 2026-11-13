@@ -1,34 +1,25 @@
-#include <stdio.h>
-#include "pico/stdlib.h"
-#include "hardware/gpio.h" // Для инициализации
-
-#include "device/device.h"
+#include "platform/platform.h"             // <-- Настройка железа
+#include "firmware.h"
 #include "logging/log.h"
+#include "systime/systime.h"
 #include "profiling/profiling.h"
 #include "stdio-text-protocol/stdio-text-protocol.h"
-#include "systime/systime.h"
-#include "firmware.h"
-#include "api.h"
-#include "led-task.h"
-#include "button-task.h"
-#include "pi-task.h"
 
-// Номера секундомеров
+// Подключаем логику
+#include "led-task/led-task.h"
+#include "button-task/button-task.h"
+#include "pi-task/pi-task.h"
+#include "api/api.h"
+
 typedef enum {
-    STOPWATCH_LOOP,
-    STOPWATCH_COMMAND,
-    STOPWATCH_LED,
-    STOPWATCH_BUTTON,
-    STOPWATCH_PI,
-    STOPWATCH_COUNT
+    STOPWATCH_LOOP, STOPWATCH_COMMAND, STOPWATCH_LED, STOPWATCH_BUTTON, STOPWATCH_PI
 } stopwatch_id_t;
 
 int main() {
-    stdio_init_all();
-    LOG_INF("%s %s\n", FIRMWARE_NAME, FIRMWARE_VERSION); // <-- Вывод версии
-    sleep_ms(2000);
+    platform_init(); // <-- Инициализация железа
+    LOG_INF("%s %s\n", FIRMWARE_NAME, FIRMWARE_VERSION);
+    
     profiling_init();
-
     profiling_stopwatch_init(STOPWATCH_LOOP, "loop");
     profiling_stopwatch_init(STOPWATCH_COMMAND, "command");
     profiling_stopwatch_init(STOPWATCH_LED, "led");
@@ -36,29 +27,28 @@ int main() {
     profiling_stopwatch_init(STOPWATCH_PI, "pi");
 
     stdio_text_protocol_init();
+    
+    // Инициализация задач
     led_task_init(); 
-    button_task_init(); 
+    // Связываем кнопку и светодиод здесь!
+    button_task_init(led_task_next_state); 
     pi_task_init(); 
 
     while (1) {
         profiling_start(STOPWATCH_LOOP);
 
-        // Светодиод
         profiling_start(STOPWATCH_LED);
         led_task_handle(); 
         profiling_stop(STOPWATCH_LED);
 
-        // Кнопка
         profiling_start(STOPWATCH_BUTTON);
         button_task_handle(); 
         profiling_stop(STOPWATCH_BUTTON);
 
-        // Пи
         profiling_start(STOPWATCH_PI);
         pi_task_handle(); 
         profiling_stop(STOPWATCH_PI);
 
-        // Прием и обработка команды
         profiling_start(STOPWATCH_COMMAND);
         const command_t *command = stdio_text_protocol_handle();
         if (command != NULL) {

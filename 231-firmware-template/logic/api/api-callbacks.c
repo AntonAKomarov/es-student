@@ -3,9 +3,9 @@
 #include "logging/log.h"        
 #include "profiling/profiling.h"
 #include "systime/systime.h"    
-#include "led-task.h"
-#include "button-task.h"
-#include "pi-task.h"
+#include "led-task/led-task.h"
+#include "button-task/button-task.h"
+#include "pi-task/pi-task.h"
 #include "firmware.h"           
 #include <stdio.h>
 #include <string.h>

@@ -8,37 +8,62 @@ pico_sdk_init()
 
 add_compile_options(-Wall)
 
-# Подключаем библиотеки из libs
 add_subdirectory(../libs ${CMAKE_BINARY_DIR}/libs)
 
-add_executable(${PROJECT_NAME} 
-	${CMAKE_CURRENT_SOURCE_DIR}/main.c
-	${CMAKE_CURRENT_SOURCE_DIR}/api/api.c
-	${CMAKE_CURRENT_SOURCE_DIR}/api/api-callbacks.c
-	${CMAKE_CURRENT_SOURCE_DIR}/led-task/led-task.c
-	${CMAKE_CURRENT_SOURCE_DIR}/button-task/button-task.c
-	${CMAKE_CURRENT_SOURCE_DIR}/pi-task/pi-task.c
+
+
+
+add_library(platform STATIC
+    platform/platform.c
+)
+target_include_directories(platform PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR} # Чтобы platform видел platform.h и firmware.h
+)
+target_link_libraries(platform PRIVATE
+    pico_stdlib
 )
 
-# Линкуем библиотеки по именам
+
+
+
+add_library(logic STATIC
+    logic/api/api.c
+    logic/api/api-callbacks.c
+    logic/led-task/led-task.c
+    logic/button-task/button-task.c
+    logic/pi-task/pi-task.c
+)
+target_include_directories(logic PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/logic
+)
+target_link_libraries(logic 
+    PUBLIC stdio_text_protocol
+    PRIVATE 
+        systime 
+        profiling 
+        platform 
+        device     
+        logging
+        led-task
+        pi-task
+        button-task     
+        api
+
+)
+
+
+add_executable(${PROJECT_NAME} main.c)
+
 target_link_libraries(${PROJECT_NAME} 
-	pico_stdlib
-	device
-	logging
-	profiling
-	stdio_text_protocol
-	systime
+    pico_stdlib # Нужен для кода запуска SDK до main()
+    platform
+    logic
+    logging
+    systime
+    profiling
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}
-	${CMAKE_CURRENT_SOURCE_DIR}/api
-	${CMAKE_CURRENT_SOURCE_DIR}/led-task
-	${CMAKE_CURRENT_SOURCE_DIR}/button-task
-	${CMAKE_CURRENT_SOURCE_DIR}/pi-task
-)
-
-# Выключатель профилирования
+# Выключатель профилирования (из п2.3.6)
 target_compile_definitions(profiling PUBLIC PROFILING_ENABLED=1)
 
 pico_enable_stdio_usb(${PROJECT_NAME} 1)
